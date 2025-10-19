@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>곱셈구구 첫걸음 - 휴르쌤</title>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <style>
+        /* ========================================================= */
+        /* 기본 스타일 (Base Styles) */
+        /* ========================================================= */
+        body {
+            font-family: 'Gowun Dodum', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            text-align: center;
+            font-size: 18px;
+        }
+        .container {
+            position: relative;
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 1100px;
+            text-align: center;
+            margin: 20px auto;
+            box-sizing: border-box;
+            min-height: 70vh;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #4b8134;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1.8em;
+        }
+        button {
+            font-family: 'Gowun Dodum', sans-serif;
+            padding: 12px 24px;
+            margin: 5px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .primary-btn {
+            background-color: #a0c179;
+            color: white;
+            font-weight: bold;
+        }
+        .primary-btn:hover {
+            background-color: #8cb24b;
+        }
+        .secondary-btn {
+            background-color: #e9e9e9;
+            color: #333;
+            border: 2px solid #ccc;
+        }
+        .secondary-btn:hover {
+            background-color: #d9d9d9;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #ccc;
+            text-align: center;
+        }
+
+        /* ========================================================= */
+        /* 공통 헤더 및 QR 버튼 */
+        /* ========================================================= */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .page-header h2 {
+            flex-grow: 1;
+            text-align: center;
+            margin: 0;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        .home-button {
+            background-color: #e9e9e9;
+            color: #333;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 1em;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        #qr-code-btn {
+            background-color: #e9e9e9;
+            color: #333;
+            padding: 5px 10px;
+            font-size: 0.9em;
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            z-index: 10;
+        }
+
+        /* ========================================================= */
+        /* 첫 페이지 (Home Page) */
+        /* ========================================================= */
+        #home-page { justify-content: center; }
+        #home-page h1 { margin-top: 50px; margin-bottom: 50px; }
+        #home-page .level-buttons { display: flex; justify-content: center; gap: 40px; width: 100%; margin-top: 0; }
+        #home-page .level-option { flex: 1; display: flex; flex-direction: column; align-items: center; max-width: 300px; }
+        #home-page .level-option button { padding: 30px 40px; font-size: 1.8em; width: 100%; background-color: #ffda79; color: #333; font-weight: bold; }
+        .level-description { white-space: pre-line; margin-top: 15px; font-size: 1.1em; color: #6c757d; line-height: 1.4; min-height: 90px; text-align: center; }
+
+        /* ========================================================= */
+        /* 1, 2, 3단계 공통 레이아웃 & 버튼 너비 최소화 */
+        /* ========================================================= */
+        .page-content-layout {
+            display: flex;
+            width: 100%;
+            text-align: left;
+            flex-grow: 1;
+        }
+        .left-panel {
+            width: 100px;
+            margin-right: 20px;
+            position: relative;
+            padding-top: 50px;
+            flex-shrink: 0;
+        }
+        .right-main-area {
+            flex-grow: 1;
+            padding-left: 20px;
+            border-left: 1px solid #eee;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .gugudan-select-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .gugudan-select-vertical button {
+            padding: 8px 5px;
+            font-size: 1em;
+            width: 100%;
+            margin: 0;
+        }
+        .direction-random-btn {
+            padding: 8px 5px;
+            font-size: 0.9em;
+            width: 100%;
+        }
+        /* 2단계: 방향 버튼 색상 스위칭 */
+        #direction-btn-l2.direction-active-forward { background-color: #ffc107; color: #333; font-weight: bold; }
+        #direction-btn-l2.direction-active-reverse { background-color: #9cdcfb; color: #333; font-weight: bold; }
+        #level3-random-btn.selected { background-color: #dc3545; color: white; font-weight: bold; }
+
+        /* ========================================================= */
+        /* 3. 단 선택 버튼 무지개 색상 팔레트 */
+        /* ========================================================= */
+        /* 2단: 빨강 (Red) */
+        .gugudan-btn-2.selected { background-color: #ff6347; color: white; font-weight: bold; }
+        /* 3단: 주황 (Orange) */
+        .gugudan-btn-3.selected { background-color: #ff8c00; color: white; font-weight: bold; }
+        /* 4단: 노랑 (Yellow) */
+        .gugudan-btn-4.selected { background-color: #ffd700; color: #333; font-weight: bold; }
+        /* 5단: 연두 (Chartreuse Green) */
+        .gugudan-btn-5.selected { background-color: #adff2f; color: #333; font-weight: bold; }
+        /* 6단: 초록 (Green) */
+        .gugudan-btn-6.selected { background-color: #3cb371; color: white; font-weight: bold; }
+        /* 7단: 하늘 (Sky Blue) */
+        .gugudan-btn-7.selected { background-color: #87ceeb; color: #333; font-weight: bold; }
+        /* 8단: 파랑 (Blue) */
+        .gugudan-btn-8.selected { background-color: #1e90ff; color: white; font-weight: bold; }
+        /* 9단: 남색/보라 (Indigo/Purple) */
+        .gugudan-btn-9.selected { background-color: #9370db; color: white; font-weight: bold; }
+
+
+        /* ========================================================= */
+        /* 1단계 (Matching Game) - 완료 메시지 크기 조정 */
+        /* ========================================================= */
+        .card-row {
+            display: flex;
+            justify-content: flex-start;
+            gap: 15px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            width: 100%;
+        }
+        .card {
+            width: 80px;
+            height: 40px;
+            line-height: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 3px solid #ccc;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+            flex-shrink: 0;
+        }
+        .card-pair {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            width: 80px;
+            flex-shrink: 0;
+        }
+        .card-placeholder {
+            width: 80px;
+            height: 40px;
+            line-height: 40px;
+            border: 3px dashed #eee;
+            border-radius: 8px;
+            flex-shrink: 0;
+            background-color: transparent;
+            cursor: default;
+        }
+        .card.selected { transform: scale(1.05); border-color: #ffc107; box-shadow: 0 0 15px rgba(255, 193, 7, 0.8); background-color: #fffbe0; }
+        .card.matched-problem { border-color: #4b8134; background-color: #e6f3d9; cursor: default; height: 40px; }
+        .card.matched-answer { 
+            border: 3px solid #ccc;
+            background-color: #f7f7f7; 
+            color: #333; 
+            margin: 0; 
+            padding: 0; 
+            height: 40px; 
+            line-height: 40px; 
+            font-size: 1.2em; 
+        }
+        #level1-matched-row { display: none; }
+        #level1-unmatched-answers-row { margin-top: 30px; min-height: 80px; } 
+        #level1-problem-row { margin-bottom: 0; }
+        #level1-page .right-main-area > p { margin-bottom: 10px; }
+        
+        /* 완료 메시지 스타일 (테두리/배경 제거 및 버튼 크기 축소) */
+        .completion-message {
+            margin-top: 50px;
+            padding: 20px;
+            border: none;
+            border-radius: 12px;
+            background-color: transparent; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 1.5em;
+            color: #4b8134;
+            font-weight: bold;
+        }
+        .completion-message p { margin: 10px 0; font-size: 0.8em; color: #333; }
+        .completion-message .popup-buttons { margin-top: 15px; }
+        /* 완료 메시지 내부 버튼 크기 축소 */
+        .completion-message .popup-buttons button {
+            padding: 8px 10px; /* 단수 버튼과 비슷한 높이로 축소 */
+            font-size: 1em; 
+            min-width: 120px;
+            height: 40px;
+        }
+
+
+        /* ========================================================= */
+        /* 2단계 (Fill-in-the-Blank) - 문제 형식 및 용어 변경 */
+        /* ========================================================= */
+        .level2-problem-area { 
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .level2-problem-row {
+            display: flex;
+            justify-content: flex-start;
+            gap: 15px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        /* 2단계 문제 카드도 1단계처럼 테두리 있는 카드 모양으로 변경 */
+        .level2-problem-text {
+            width: 80px;
+            height: 40px;
+            line-height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 3px solid #4b8134;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #4b8134;
+            flex-shrink: 0;
+            box-sizing: border-box;
+        }
+        .level2-pair { 
+            width: 80px; 
+            flex-shrink: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 5px; 
+        }
+        .level2-answer-box { 
+            width: 80px; 
+            height: 40px;
+            line-height: 40px;
+            border: 3px solid #ccc;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            background-color: #f7f7f7;
+        }
+        .level2-answer-box.flipped { background-color: #fff; padding: 0; }
+
+        /* 2단계 입력 필드 개선 */
+        .level2-input {
+            width: 70px;
+            height: 34px;
+            font-family: 'Gowun Dodum', sans-serif;
+            font-size: 1.8em;
+            text-align: center;
+            border: 2px solid #ffc107;
+            border-radius: 4px;
+            box-sizing: border-box;
+            line-height: 34px;
+            padding: 0;
+            margin: 0;
+        }
+        /* 위아래 증감 버튼 제거 */
+        .level2-input::-webkit-outer-spin-button,
+        .level2-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .level2-input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* 2단계 오답 카드 표시 */
+        .level2-pair.incorrect .level2-answer-box {
+            border-color: #dc3545;
+            background-color: #fff0f0;
+        }
+        .level2-pair.incorrect .level2-problem-text {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        /* ========================================================= */
+        /* 3단계 (Quiz) - UI 및 버튼 */
+        /* ========================================================= */
+        #level3-mode-select-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        #level3-mode-select {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 0;
+            width: 100%;
+        }
+        /* 3단계 모드 버튼 크기 복구 */
+        #level3-mode-select button {
+            padding: 30px 50px;
+            font-size: 1.8em;
+            width: 300px;
+            max-width: 40%;
+            height: 120px;
+        }
+        /* 3단계 모드 버튼 색상 변경 (답 고르기=노랑, 직접 입력=빨강) */
+        #level3-mode-select button#mode-4choice-btn {
+             background-color: #ffc107;
+             color: #333;
+        }
+        #level3-mode-select button#mode-4choice-btn:hover {
+             background-color: #fdb827;
+        }
+        #level3-mode-select button#mode-input-btn {
+             background-color: #e06666;
+             color: white;
+        }
+        #level3-mode-select button#mode-input-btn:hover {
+             background-color: #cc4125;
+        }
+
+        .mode-select-guide {
+            font-size: 1.4em;
+            color: #6c757d;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+        .level3-problem-area { font-size: 3.8em; margin: 60px 0 40px 0; min-height: 100px; text-align: center; }
+        .level3-options-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px auto;
+            max-width: 600px;
+        }
+        .level3-options-area button { width: 100%; height: 100px; padding: 15px 10px; font-size: 1.8em; margin: 0; }
+        .level3-input-area { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px; margin-top: 30px; }
+        #level3-answer-input { width: 200px; height: 70px; font-size: 3em; text-align: center; border: 3px solid #ccc; border-radius: 8px; }
+        #level3-submit-btn { padding: 15px 30px; font-size: 1.6em; background-color: #4b8134; color: white; width: 200px; }
+        .level3-result-message { margin-top: 20px; font-size: 1.2em; font-weight: bold; min-height: 30px; text-align: center; }
+
+        /* 3단계 실시간 현황 표시 스타일 */
+        #level3-status {
+            font-size: 1.1em;
+            color: #6c757d;
+            font-weight: bold;
+            min-height: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .status-accuracy { color: #4b8134; font-size: 1.2em; }
+
+
+        /* ========================================================= */
+        /* 팝업 및 경고 (유지) */
+        /* ========================================================= */
+        .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 900; transition: opacity 0.3s; }
+        .popup-qr { z-index: 1000; background-color: rgba(255, 255, 255, 0.9); }
+        .popup-box { background-color: white; padding: 40px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); position: relative; width: 80%; max-width: 500px; text-align: center; }
+        #orientation-warning {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); color: white; z-index: 999; display: none; flex-direction: column; justify-content: center; align-items: center; font-size: 1.5em; text-align: center; line-height: 1.5; padding: 20px;
+        }
+        @media (max-aspect-ratio: 1/1) and (max-width: 1100px) {
+            #orientation-warning { display: flex; }
+            .container { display: none !important; }
+        }
+        @media (min-aspect-ratio: 1/1) and (min-width: 768px) {
+            #orientation-warning { display: none !important; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="orientation-warning">
+        <p>기기를 가로 방향으로 돌려주세요! 🔄</p>
+    </div>
+
+    <div id="home-page" class="container" style="display: flex;">
+        <button id="qr-code-btn" class="secondary-btn" onclick="openQrPopup()">QR 코드</button>
+        
+        <h1>곱셈구구 첫걸음</h1>
+
+        <div class="level-buttons">
+            <div class="level-option">
+                <button class="primary-btn" onclick="startLevel(1, 2)">1단계</button>
+                <p class="level-description">문제 카드와 답 카드를
+짝지어 연결해요.</p>
+            </div>
+            <div class="level-option">
+                <button class="primary-btn" onclick="startLevel(2, 2)">2단계</button>
+                <p class="level-description">카드 일부가 없어졌어요!
+빈칸에 알맞은 답을
+직접 채워요.</p>
+            </div>
+            <div class="level-option">
+                <button class="primary-btn" onclick="startLevel(3)">3단계</button>
+                <p class="level-description">답 고르기 또는 직접 입력으로
+곱셈구구 실력을 길러요.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="level1-page" class="container">
+        <div class="page-header">
+            <button class="home-button" onclick="showPage('home-page')">처음으로 돌아가기</button>
+            <h2>1단계: 짝 맞추기</h2>
+            <span style="visibility: hidden; width: 80px;">QR 코드</span>
+        </div>
+        
+        <div class="page-content-layout">
+            <div class="left-panel">
+                <button id="direction-btn" class="direction-random-btn secondary-btn" onclick="toggleDirection(1)">역방향</button>
+                <div class="gugudan-select-vertical" id="level1-gugudan-select">
+                    </div>
+            </div>
+
+            <div class="right-main-area">
+                <p style="font-size: 1.1em; color: #6c757d; text-align: left;">문제 카드 (클릭해서 선택하세요)</p>
+                <div id="level1-problem-row" class="card-row">
+                    </div>
+                
+                <div id="level1-matched-row" style="display: none;" class="card-row"></div>
+
+                <p style="font-size: 1.1em; color: #6c757d; text-align: left; margin-top: 30px;">답 카드 (클릭해서 선택하세요)</p>
+                <div id="level1-unmatched-answers-row" class="card-row">
+                    </div>
+                
+                <div id="level1-completion-message" class="completion-message" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="level2-page" class="container">
+        <div class="page-header">
+            <button class="home-button" onclick="showPage('home-page')">처음으로 돌아가기</button>
+            <h2>2단계: 빈칸 채우기</h2>
+            <span style="visibility: hidden; width: 80px;">QR 코드</span>
+        </div>
+
+        <div class="page-content-layout">
+            <div class="left-panel">
+                <button id="direction-btn-l2" class="direction-random-btn secondary-btn" onclick="toggleDirection(2)">역방향</button>
+                <div class="gugudan-select-vertical" id="level2-gugudan-select">
+                    </div>
+            </div>
+
+            <div class="right-main-area">
+                <div class="level2-control-area">
+                    <div id="level2-control">
+                        <p style="font-size: 1.1em; margin: 0;">뒤집을 카드 개수:</p>
+                        <button class="secondary-btn" onclick="changeFlipCount(-1)">-</button>
+                        <span class="quantity-display" id="flip-count-display">1</span>
+                        <button class="secondary-btn" onclick="changeFlipCount(1)">+</button>
+                        <button class="primary-btn" onclick="flipRandomCards()">뒤집어요!</button>
+                        <button class="secondary-btn" onclick="checkLevel2Answers()">확인</button>
+                    </div>
+                </div>
+
+                <div class="level2-problem-area">
+                    <p style="font-size: 1.1em; color: #6c757d; text-align: left;">빈칸에 답을 입력하고 확인 버튼을 누르세요</p>
+                    <div id="level2-problem-area-row" class="level2-problem-row">
+                        </div>
+                </div>
+                
+                <div id="level2-completion-message" class="completion-message" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="level3-page" class="container">
+        <div class="page-header">
+            <button class="home-button" onclick="showPage('home-page')">처음으로 돌아가기</button>
+            <h2>3단계: 실력 기르기</h2>
+            <span style="visibility: hidden; width: 80px;">QR 코드</span>
+        </div>
+
+        <div id="level3-mode-select-wrapper">
+            <p class="mode-select-guide">원하는 문제 유형을 골라보세요</p>
+            <div id="level3-mode-select">
+                <button id="mode-4choice-btn" class="primary-btn" onclick="selectLevel3Mode('4choice')">답 고르기</button>
+                <button id="mode-input-btn" class="secondary-btn" onclick="selectLevel3Mode('input')">직접 입력</button>
+            </div>
+        </div>
+
+        <div id="level3-quiz-area" style="display: none; flex-grow: 1; width: 100%;">
+            <div class="page-content-layout">
+                <div class="left-panel">
+                    <button id="level3-random-btn" class="direction-random-btn secondary-btn" onclick="toggleRandomMode()">섞어요!</button>
+                    <div class="gugudan-select-vertical" id="level3-gugudan-select">
+                        </div>
+                </div>
+
+                <div class="right-main-area" style="justify-content: center; align-items: center; text-align: center;">
+                    
+                    <div style="width: 100%;">
+                        <div id="level3-problem-area" class="level3-problem-area">2 x 1 = ?</div>
+                        
+                        <div id="level3-options-area" class="level3-options-area">
+                            </div>
+                        
+                        <div id="level3-input-area" class="level3-input-area" style="display: none;">
+                            <input type="number" id="level3-answer-input" placeholder="답 입력" onkeydown="handleLevel3Input(event)">
+                            <button id="level3-submit-btn" class="primary-btn" onclick="checkLevel3Answer()">정답 확인</button>
+                        </div>
+                        
+                        <div id="level3-result-message" class="level3-result-message"></div>
+                    </div>
+
+                    <div style="margin-top: 40px; text-align: center;">
+                        <div id="level3-status">0문제를 풀었어요! 정확도: <span class="status-accuracy">100%</span></div>
+                        <button id="next-problem-btn" class="primary-btn" onclick="nextLevel3Problem()">다음 문제</button>
+                        <button class="secondary-btn" onclick="finishLevel3()">연습 끝!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="level3-result-page" class="container" style="display: none;">
+            <h3>✨ 최종 연습 결과 ✨</h3>
+            <div class="final-result-layout">
+                <div class="result-left">
+                    <p style="font-size: 1.5em; margin-bottom: 5px;">최종 정확도</p>
+                    <div id="final-accuracy">0%</div>
+                </div>
+                <div class="result-right">
+                    <p>전체 도전 문제 수: <strong id="result-total-count">0</strong>개</p>
+                    <p>한 번에 맞춘 문제: <strong id="result-first-try">0</strong>개</p>
+                    <p>다시 도전해 맞춘 문제: <strong id="result-retry-count">0</strong>개</p>
+                </div>
+            </div>
+            <div class="popup-buttons">
+                <button class="secondary-btn" onclick="showPage('home-page')">처음으로 돌아가기</button>
+                <button class="primary-btn" onclick="startLevel(3)">3단계 다시 시작</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="popup-overlay" class="popup-overlay" style="display: none;">
+        <div class="popup-box">
+            <h2 id="popup-title"></h2>
+            <p id="popup-message"></p>
+            <div class="popup-buttons" id="popup-buttons">
+            </div>
+        </div>
+    </div>
+    
+    <div id="level2-error-popup-overlay" class="popup-overlay" style="display: none;">
+        <div class="popup-box">
+            <h2 id="level2-error-popup-title">🙏 다시 한번 확인해볼까요?</h2>
+            <p id="level2-error-popup-message">틀린 문제가 있어요! 붉게 표시된 카드를 다시 확인하고 고쳐주세요.</p>
+            <div class="popup-buttons">
+                 <button class="primary-btn" onclick="closeLevel2ErrorPopup()">알겠어요!</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="qr-popup-overlay" class="popup-overlay popup-qr" style="display: none;">
+        <div class="popup-box">
+            <button class="secondary-btn close-btn-qr" onclick="closeQrPopup()">X</button>
+            <h3>QR 코드</h3>
+            <div class="qr-image-placeholder">
+                
+                <br>
+                (이미지 후 제공 예정)
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer">
+        Copyright © 2025 휴르쌤. All rights reserved.
+    </div>
+
+    <script>
+        // 상태 변수
+        let currentPage = 'home-page';
+        let currentGuGuDan = 2;
+        let isReverse = false;
+
+        let selectedProblemCard = null;
+        let selectedAnswerCard = null;
+        let level1Problems = [];
+        let level1Answers = [];
+        let matchedPairs = 0;
+
+        let level2FlipCount = 1;
+        let level2ProblemSet = [];
+        let flippedIndices = [];
+
+        let level3Mode = '4choice';
+        let selectedGugudans = new Set();
+        let isLevel3Random = false;
+        let level3CurrentProblem = null;
+        let level3Attempts = {}; 
+        let level3Accuracy = {
+            totalProblems: 0,
+            correctOnFirstTry: 0,
+            retryCorrect: 0, 
+            scoreSum: 0, 
+        };
+
+        // DOM 요소 캐싱
+        const homePage = document.getElementById('home-page');
+        const level1Page = document.getElementById('level1-page');
+        const level2Page = document.getElementById('level2-page');
+        const level3Page = document.getElementById('level3-page');
+        const level3ResultPage = document.getElementById('level3-result-page');
+        const popupOverlay = document.getElementById('popup-overlay');
+        const qrPopupOverlay = document.getElementById('qr-popup-overlay');
+        const level2ErrorPopupOverlay = document.getElementById('level2-error-popup-overlay');
+        const orientationWarning = document.getElementById('orientation-warning');
+        const nextProblemBtn = document.getElementById('next-problem-btn');
+        
+        // 헬퍼 함수
+        function generateGugudanSet(dan, reverse) {
+            const set = [];
+            for (let i = 1; i <= 9; i++) {
+                set.push({ 
+                    problem: `${dan} x ${i}`, 
+                    answer: dan * i, 
+                    id: dan * 10 + i 
+                });
+            }
+            return reverse ? set.reverse() : set;
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        function createPopupButton(className, text, onClick) {
+            const btn = document.createElement('button');
+            btn.className = className;
+            btn.textContent = text;
+            btn.onclick = onClick;
+            return btn;
+        }
+
+        // 단 버튼 색상 팔레트
+        const DAN_COLORS = {
+            2: '#ff6347', 3: '#ff8c00', 4: '#ffd700', 5: '#adff2f', 6: '#3cb371', 7: '#87ceeb', 8: '#1e90ff', 9: '#9370db'
+        };
+        const DAN_TEXT_COLOR = {
+            2: 'white', 3: 'white', 4: '#333', 5: '#333', 6: 'white', 7: '#333', 8: 'white', 9: 'white'
+        };
+
+
+        // 페이지 전환 함수
+        function showPage(pageId) {
+            // level3-result-page를 포함하여 모든 컨테이너를 숨김
+            [homePage, level1Page, level2Page, level3Page, level3ResultPage].forEach(page => {
+                if (page) page.style.display = 'none';
+            });
+
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.style.display = 'flex';
+                currentPage = pageId;
+
+                if (pageId === 'level3-page') {
+                    document.getElementById('level3-mode-select-wrapper').style.display = 'flex';
+                    document.getElementById('level3-quiz-area').style.display = 'none';
+                    document.getElementById('level3-result-page').style.display = 'none';
+                }
+            }
+        }
+
+        // 초기 시작 함수
+        function startLevel(level, dan = 2) {
+            currentGuGuDan = dan;
+            isReverse = false;
+
+            if (level === 1) {
+                setupGugudanButtons(1);
+                showPage('level1-page');
+                loadLevel1Cards(currentGuGuDan, isReverse);
+                document.getElementById('level1-completion-message').style.display = 'none';
+            } else if (level === 2) {
+                setupGugudanButtons(2);
+                showPage('level2-page');
+                loadLevel2Cards(currentGuGuDan, isReverse);
+                document.getElementById('level2-completion-message').style.display = 'none';
+            } else if (level === 3) {
+                showPage('level3-page');
+            }
+        }
+
+        // 단 선택 버튼 생성 (1단계/2단계 공통)
+        function setupGugudanButtons(level) {
+            const containerId = level === 1 ? 'level1-gugudan-select' : 'level2-gugudan-select';
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            for (let dan = 2; dan <= 9; dan++) {
+                const btn = document.createElement('button');
+                btn.className = `secondary-btn gugudan-btn-${dan}`;
+                btn.textContent = `${dan}단`;
+                btn.setAttribute('data-dan', dan);
+                btn.onclick = () => {
+                    selectGuGuDan(level, dan);
+                };
+                container.appendChild(btn);
+            }
+            selectGuGuDan(level, currentGuGuDan);
+        }
+
+        // 단 선택 시 동작
+        function selectGuGuDan(level, dan) {
+            currentGuGuDan = dan;
+            isReverse = false;
+            
+            const containerId = level === 1 ? 'level1-gugudan-select' : 'level2-gugudan-select';
+            const directionBtnId = level === 1 ? 'direction-btn' : 'direction-btn-l2';
+            
+            // 모든 버튼 초기화 및 선택된 단 색상 적용
+            document.querySelectorAll(`#${containerId} button`).forEach(btn => {
+                const danNum = parseInt(btn.getAttribute('data-dan'));
+                btn.classList.remove('selected');
+                btn.style.backgroundColor = '#e9e9e9';
+                btn.style.color = '#333';
+                if (danNum === dan) {
+                    btn.classList.add('selected');
+                    btn.style.backgroundColor = DAN_COLORS[danNum];
+                    btn.style.color = DAN_TEXT_COLOR[danNum];
+                }
+            });
+
+            const directionBtn = document.getElementById(directionBtnId);
+            directionBtn.textContent = '역방향';
+            if(level === 2) {
+                directionBtn.classList.remove('direction-active-forward', 'direction-active-reverse');
+            }
+
+            if (level === 1) {
+                loadLevel1Cards(dan, isReverse);
+                document.getElementById('level1-completion-message').style.display = 'none';
+            } else if (level === 2) {
+                loadLevel2Cards(dan, isReverse);
+                document.getElementById('level2-completion-message').style.display = 'none';
+            }
+        }
+
+        // 정방향/역방향 토글 (1단계/2단계 공통)
+        function toggleDirection(level) {
+            isReverse = !isReverse;
+            const directionBtnId = level === 1 ? 'direction-btn' : 'direction-btn-l2';
+            const directionBtn = document.getElementById(directionBtnId);
+            directionBtn.textContent = isReverse ? '정방향' : '역방향';
+
+            if (level === 2) {
+                directionBtn.classList.remove('direction-active-forward', 'direction-active-reverse');
+                if (!isReverse) {
+                    directionBtn.classList.add('direction-active-forward');
+                } else {
+                    directionBtn.classList.add('direction-active-reverse');
+                }
+            }
+
+            if (level === 1) {
+                loadLevel1Cards(currentGuGuDan, isReverse);
+            } else if (level === 2) {
+                loadLevel2Cards(currentGuGuDan, isReverse);
+            }
+        }
+
+        // 1단계 로직
+        function loadLevel1Cards(dan, reverse) {
+            const gugudanSet = generateGugudanSet(dan, reverse);
+            level1Problems = gugudanSet.map(item => ({...item, isMatched: false}));
+            
+            let answers = gugudanSet.map(item => ({...item, isMatched: false}));
+            level1Answers = shuffle(answers); 
+            
+            matchedPairs = 0;
+            selectedProblemCard = null;
+            selectedAnswerCard = null;
+
+            renderLevel1Cards();
+            document.getElementById('level1-completion-message').style.display = 'none';
+        }
+
+        function renderLevel1Cards() {
+            const problemRow = document.getElementById('level1-problem-row');
+            const answerRow = document.getElementById('level1-unmatched-answers-row');
+            
+            problemRow.innerHTML = '';
+            answerRow.innerHTML = '';
+
+            const problemContainers = {};
+
+            // 1. 문제 카드 렌더링 및 컨테이너 생성
+            level1Problems.forEach((item) => {
+                const pairContainer = document.createElement('div');
+                pairContainer.className = 'card-pair';
+                pairContainer.setAttribute('data-id', item.id);
+
+                const card = document.createElement('div');
+                card.className = `card problem-card ${selectedProblemCard && selectedProblemCard.id === item.id ? 'selected' : ''}`;
+                card.textContent = item.problem;
+                card.setAttribute('data-id', item.id);
+                
+                pairContainer.appendChild(card);
+                
+                if (item.isMatched) {
+                     card.className = 'card matched-problem';
+                     card.onclick = null;
+
+                     const matchedAnswerCard = document.createElement('div');
+                     matchedAnswerCard.className = 'card matched-answer';
+                     matchedAnswerCard.textContent = item.answer;
+                     pairContainer.appendChild(matchedAnswerCard);
+                     
+                     problemContainers[item.id] = pairContainer;
+                } else {
+                     card.onclick = () => selectCard(item, 'problem', card, pairContainer);
+                     problemContainers[item.id] = pairContainer;
+                }
+            });
+
+            // 2. 문제 카드를 순서대로 배치 (제자리 유지)
+            const finalProblemRow = document.getElementById('level1-problem-row');
+            finalProblemRow.innerHTML = '';
+            level1Problems.forEach((item) => {
+                finalProblemRow.appendChild(problemContainers[item.id]);
+            });
+
+
+            // 3. 답 카드 렌더링 (미매칭된 것만, 빈 공간을 포함하여 제자리에 유지)
+            const shuffledAnswers = level1Answers; 
+            
+            for(let i=0; i<shuffledAnswers.length; i++) {
+                const item = shuffledAnswers[i];
+                const isProblemMatched = level1Problems.find(p => p.id === item.id)?.isMatched;
+
+                if (isProblemMatched) {
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'card-placeholder';
+                    answerRow.appendChild(placeholder);
+                } else {
+                    const card = document.createElement('div');
+                    card.className = `card answer-card ${selectedAnswerCard && selectedAnswerCard.id === item.id ? 'selected' : ''}`;
+                    card.textContent = item.answer;
+                    card.setAttribute('data-answer', item.answer);
+                    card.setAttribute('data-problem-id', item.id);
+                    card.onclick = () => selectCard(item, 'answer', card);
+                    answerRow.appendChild(card);
+                }
+            }
+        }
+
+        function selectCard(item, type, element, pairContainer = null) {
+            if (level1Problems.find(p => p.id === item.id)?.isMatched) return;
+
+            if (type === 'problem' && selectedProblemCard && selectedProblemCard.id === item.id) {
+                selectedProblemCard = null;
+                element.classList.remove('selected');
+            } else if (type === 'answer' && selectedAnswerCard && selectedAnswerCard.id === item.id) {
+                selectedAnswerCard = null;
+                element.classList.remove('selected');
+            } 
+            else if (type === 'problem') {
+                if (selectedProblemCard) selectedProblemCard.element.classList.remove('selected');
+                selectedProblemCard = {...item, element, pairContainer};
+                element.classList.add('selected');
+            } else if (type === 'answer') {
+                if (selectedAnswerCard) selectedAnswerCard.element.classList.remove('selected');
+                selectedAnswerCard = {...item, element};
+                element.classList.add('selected');
+            }
+
+            if (selectedProblemCard && selectedAnswerCard) {
+                const problemId = selectedProblemCard.id;
+                const answerValue = selectedAnswerCard.answer;
+
+                const correctProblem = level1Problems.find(p => p.id === problemId);
+
+                if (correctProblem && correctProblem.answer === answerValue) {
+                    matchCards(problemId, answerValue);
+                } else {
+                    setTimeout(() => {
+                        if (selectedProblemCard && selectedProblemCard.id === problemId) {
+                            selectedProblemCard.element.classList.remove('selected');
+                        }
+                        if (selectedAnswerCard && selectedAnswerCard.id === selectedAnswerCard.id) {
+                            selectedAnswerCard.element.classList.remove('selected');
+                        }
+                        selectedProblemCard = null;
+                        selectedAnswerCard = null;
+                    }, 500);
+                }
+            }
+        }
+
+        function matchCards(problemId, answerValue) {
+            matchedPairs++;
+            
+            const problemIndex = level1Problems.findIndex(p => p.id === problemId);
+            if (problemIndex !== -1) level1Problems[problemIndex].isMatched = true;
+            
+            const answerIndex = level1Answers.findIndex(a => a.id === problemId);
+            if (answerIndex !== -1) level1Answers[answerIndex].isMatched = true;
+
+            renderLevel1Cards();
+
+            selectedProblemCard = null;
+            selectedAnswerCard = null;
+            
+            if (matchedPairs === 9) {
+                showCompletionMessage(1);
+            }
+        }
+
+
+        // 2단계 로직
+        function loadLevel2Cards(dan, reverse) {
+            level2ProblemSet = generateGugudanSet(dan, reverse);
+            flippedIndices = [];
+            level2FlipCount = 1;
+            document.getElementById('flip-count-display').textContent = level2FlipCount;
+            renderLevel2Cards(true);
+            level2ErrorPopupOverlay.style.display = 'none';
+            document.getElementById('level2-completion-message').style.display = 'none';
+        }
+
+        function renderLevel2Cards(showAllAnswers = true) {
+            const problemRow = document.getElementById('level2-problem-area-row');
+            problemRow.innerHTML = '';
+            
+            level2ProblemSet.forEach((item, index) => {
+                const pairContainer = document.createElement('div');
+                pairContainer.className = 'level2-pair';
+                pairContainer.setAttribute('data-index', index);
+
+                // 2단계 문제 카드 (1단계와 동일한 카드 디자인)
+                const problemText = document.createElement('div');
+                problemText.className = 'level2-problem-text';
+                problemText.textContent = `${item.problem}`;
+                pairContainer.appendChild(problemText);
+
+                const answerBox = document.createElement('div');
+                answerBox.className = 'level2-answer-box';
+                
+                if (flippedIndices.includes(index) && !showAllAnswers) {
+                    answerBox.className += ' flipped';
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.min = '1';
+                    input.max = '81';
+                    input.className = 'level2-input';
+                    input.setAttribute('data-answer', item.answer);
+                    input.setAttribute('data-index', index);
+                    answerBox.appendChild(input);
+                } 
+                else {
+                    answerBox.textContent = item.answer;
+                }
+                
+                pairContainer.appendChild(answerBox);
+                problemRow.appendChild(pairContainer);
+            });
+        }
+
+        function changeFlipCount(delta) {
+            level2FlipCount = Math.max(1, Math.min(9, level2FlipCount + delta));
+            document.getElementById('flip-count-display').textContent = level2FlipCount;
+        }
+
+        function flipRandomCards() {
+            renderLevel2Cards(true);
+
+            const allIndices = Array.from({length: 9}, (_, i) => i);
+            flippedIndices = shuffle(allIndices).slice(0, level2FlipCount);
+            
+            renderLevel2Cards(false);
+
+            document.querySelectorAll('.level2-pair').forEach(pair => pair.classList.remove('incorrect'));
+        }
+
+        function checkLevel2Answers() {
+            let allCorrect = true;
+            let correctCount = 0;
+            const inputs = document.querySelectorAll('#level2-problem-area-row .level2-input');
+            
+            document.querySelectorAll('.level2-pair').forEach(pair => pair.classList.remove('incorrect'));
+
+            if (flippedIndices.length === 0) {
+                alert('카드를 먼저 뒤집어요! 버튼을 눌러 빈칸을 만들어 주세요.');
+                return;
+            }
+
+            inputs.forEach(input => {
+                const index = parseInt(input.getAttribute('data-index'));
+                const correctAnswer = parseInt(input.getAttribute('data-answer'));
+                const userAnswer = parseInt(input.value.trim());
+                const pairElement = document.querySelector(`.level2-pair[data-index="${index}"]`);
+
+                if (userAnswer === correctAnswer) {
+                    correctCount++;
+                    const answerBox = input.parentElement;
+                    answerBox.textContent = correctAnswer;
+                    answerBox.classList.remove('flipped');
+                } else {
+                    allCorrect = false;
+                    pairElement.classList.add('incorrect');
+                }
+            });
+            
+            if (correctCount === flippedIndices.length && inputs.length > 0) {
+                showCompletionMessage(2);
+            } else if (!allCorrect) {
+                level2ErrorPopupOverlay.style.display = 'flex';
+            }
+        }
+        
+        function closeLevel2ErrorPopup() {
+            level2ErrorPopupOverlay.style.display = 'none';
+        }
+
+
+        // 3단계 로직
+        function updateLevel3Status() {
+            const total = level3Accuracy.totalProblems;
+            const scoreSum = level3Accuracy.scoreSum;
+            let accuracy = 0;
+            if (total > 0) {
+                accuracy = Math.round((scoreSum / total) * 100);
+            } else {
+                // 아직 문제가 없을 때는 100%로 표시 (또는 0문제 상태 유지)
+                accuracy = 100;
+            }
+
+            const statusElement = document.getElementById('level3-status');
+            if (statusElement) {
+                statusElement.innerHTML = `${total}문제를 풀었어요! 정확도: <span class="status-accuracy">${accuracy}%</span>`;
+            }
+        }
+
+        function selectLevel3Mode(mode) {
+            level3Mode = mode;
+            
+            const mode4ChoiceBtn = document.getElementById('mode-4choice-btn');
+            const modeInputBtn = document.getElementById('mode-input-btn');
+            
+            mode4ChoiceBtn.textContent = '답 고르기';
+
+            mode4ChoiceBtn.className = mode === '4choice' ? 'primary-btn' : 'secondary-btn';
+            modeInputBtn.className = mode === 'input' ? 'primary-btn' : 'secondary-btn';
+
+            document.getElementById('level3-mode-select-wrapper').style.display = 'none';
+
+            document.getElementById('level3-options-area').style.display = mode === '4choice' ? 'grid' : 'none';
+            document.getElementById('level3-input-area').style.display = mode === 'input' ? 'flex' : 'none';
+
+            document.getElementById('level3-quiz-area').style.display = 'flex';
+
+            setupLevel3Buttons();
+            resetLevel3Accuracy();
+            updateLevel3Status(); // 상태 초기화 후 업데이트
+            generateNewLevel3Problem();
+        }
+
+        function setupLevel3Buttons() {
+            const container = document.getElementById('level3-gugudan-select');
+            container.innerHTML = '';
+            selectedGugudans.clear();
+
+            for (let dan = 2; dan <= 9; dan++) {
+                const btn = document.createElement('button');
+                btn.className = `secondary-btn gugudan-btn-${dan}`;
+                btn.textContent = `${dan}단`;
+                btn.setAttribute('data-dan', dan);
+                btn.onclick = () => toggleLevel3Dan(dan, btn);
+                container.appendChild(btn);
+            }
+            toggleLevel3Dan(2, document.querySelector('#level3-gugudan-select button[data-dan="2"]'));
+        }
+
+        function toggleLevel3Dan(dan, btn) {
+            const danNum = dan;
+            if (selectedGugudans.has(dan)) {
+                if (selectedGugudans.size > 1) {
+                    selectedGugudans.delete(dan);
+                    btn.classList.remove('selected');
+                    btn.style.backgroundColor = '#e9e9e9';
+                    btn.style.color = '#333';
+                }
+            } else {
+                selectedGugudans.add(dan);
+                btn.classList.add('selected');
+                btn.style.backgroundColor = DAN_COLORS[danNum];
+                btn.style.color = DAN_TEXT_COLOR[danNum];
+                isLevel3Random = false;
+                document.getElementById('level3-random-btn').classList.remove('selected');
+            }
+            generateNewLevel3Problem();
+        }
+
+        function toggleRandomMode() {
+            isLevel3Random = !isLevel3Random;
+            const btn = document.getElementById('level3-random-btn');
+
+            if (isLevel3Random) {
+                selectedGugudans.clear();
+                document.querySelectorAll('#level3-gugudan-select button').forEach(b => {
+                    b.classList.remove('selected');
+                    b.style.backgroundColor = '#e9e9e9';
+                    b.style.color = '#333';
+                });
+                btn.classList.add('selected');
+            } else {
+                btn.classList.remove('selected');
+                toggleLevel3Dan(2, document.querySelector('#level3-gugudan-select button[data-dan="2"]'));
+            }
+            generateNewLevel3Problem();
+        }
+
+        function generateRandomProblem() {
+            let dan;
+            let mul;
+            
+            if (isLevel3Random || selectedGugudans.size === 0) {
+                dan = Math.floor(Math.random() * 8) + 2;
+            } else {
+                const danArray = Array.from(selectedGugudans);
+                dan = danArray[Math.floor(Math.random() * danArray.length)];
+            }
+            mul = Math.floor(Math.random() * 9) + 1;
+
+            return {
+                problem: `${dan} x ${mul}`,
+                answer: dan * mul,
+                id: dan * 10 + mul,
+            };
+        }
+
+        function generateNewLevel3Problem() {
+            // 문제가 로딩되는 동안 답 버튼을 비활성화
+            document.querySelectorAll('#level3-options-area button, #level3-submit-btn').forEach(btn => btn.disabled = true);
+            
+            document.getElementById('level3-result-message').textContent = '';
+            document.getElementById('level3-answer-input').value = '';
+            
+            let newProblem;
+            do {
+                newProblem = generateRandomProblem();
+            } while (level3CurrentProblem && newProblem.id === level3CurrentProblem.id); 
+
+            level3CurrentProblem = newProblem;
+            
+            if (!level3Attempts[level3CurrentProblem.id]) {
+                level3Attempts[level3CurrentProblem.id] = 0;
+            }
+
+            document.getElementById('level3-problem-area').textContent = `${level3CurrentProblem.problem} = ?`;
+
+            if (level3Mode === '4choice') {
+                document.querySelectorAll('#level3-options-area button').forEach(btn => {
+                    btn.style.backgroundColor = '';
+                    btn.style.color = '';
+                });
+                renderLevel3Options(level3CurrentProblem.answer);
+            }
+            
+            // 로딩 완료 후 답 버튼 다시 활성화 (비활성화 오류 수정)
+            document.querySelectorAll('#level3-options-area button, #level3-submit-btn').forEach(btn => btn.disabled = false);
+        }
+
+        function generateCloseWrongAnswers(correctAnswer) {
+            const options = new Set();
+            options.add(correctAnswer);
+
+            let range = [-2, -1, 1, 2, -3, 3, -4, 4];
+            let count = 0;
+            
+            while (options.size < 4 && count < 10) {
+                let wrongAnswer;
+                if (count < range.length) {
+                    wrongAnswer = correctAnswer + range[count];
+                } else {
+                    wrongAnswer = Math.floor(Math.random() * 81) + 1;
+                }
+                
+                if (wrongAnswer >= 1 && wrongAnswer <= 81 && !options.has(wrongAnswer)) {
+                    options.add(wrongAnswer);
+                }
+                count++;
+            }
+            
+            while (options.size < 4) {
+                options.add(Math.floor(Math.random() * 81) + 1);
+            }
+
+            return Array.from(options);
+        }
+
+        function renderLevel3Options(correctAnswer) {
+            const optionsArea = document.getElementById('level3-options-area');
+            optionsArea.innerHTML = '';
+            
+            let optionArray = shuffle(generateCloseWrongAnswers(correctAnswer));
+
+            optionArray.forEach(answer => {
+                const btn = document.createElement('button');
+                btn.className = 'primary-btn';
+                btn.textContent = answer;
+                btn.onclick = () => checkLevel3Answer(answer);
+                optionsArea.appendChild(btn);
+            });
+        }
+
+        function checkLevel3Answer(userAnswer = null) {
+            // 버튼 비활성화 (답변 제출 중)
+            document.querySelectorAll('#level3-options-area button, #level3-submit-btn').forEach(btn => btn.disabled = true);
+            
+            if (level3Mode === 'input') {
+                const inputElement = document.getElementById('level3-answer-input');
+                userAnswer = parseInt(inputElement.value.trim());
+                if (isNaN(userAnswer)) {
+                    document.getElementById('level3-result-message').textContent = '💡 답을 입력해 주세요.';
+                    document.getElementById('level3-result-message').className = 'level3-result-message incorrect-msg';
+                    // 버튼 다시 활성화
+                    document.querySelectorAll('#level3-options-area button, #level3-submit-btn').forEach(btn => btn.disabled = false);
+                    return;
+                }
+            }
+
+            const messageElement = document.getElementById('level3-result-message');
+            const problemId = level3CurrentProblem.id;
+
+            if (level3Attempts[problemId] < 0) return; 
+
+            level3Attempts[problemId]++;
+            
+            if (userAnswer === level3CurrentProblem.answer) {
+                messageElement.textContent = '✨ 정답입니다! ✨';
+                messageElement.className = 'level3-result-message correct-msg';
+                
+                calculateAccuracy(problemId, level3Attempts[problemId]);
+
+                level3Attempts[problemId] *= -1; 
+                
+                if (level3Mode === '4choice') {
+                    document.querySelectorAll('#level3-options-area button').forEach(btn => {
+                        if (parseInt(btn.textContent) === level3CurrentProblem.answer) {
+                            btn.style.backgroundColor = '#4b8134';
+                            btn.style.color = 'white';
+                        }
+                    });
+                }
+                updateLevel3Status(); // 정답 시 실시간 상태 업데이트
+                setTimeout(nextLevel3Problem, 800);
+
+            } else {
+                messageElement.textContent = `🐛 틀렸어요. 다시 시도해보세요. (현재 ${level3Attempts[problemId]}회 시도)`;
+                messageElement.className = 'level3-result-message incorrect-msg';
+                
+                if (level3Mode === 'input') {
+                    document.getElementById('level3-answer-input').value = '';
+                    document.getElementById('level3-answer-input').focus();
+                }
+                
+                // 틀렸을 경우 답 버튼 다시 활성화
+                document.querySelectorAll('#level3-options-area button, #level3-submit-btn').forEach(btn => btn.disabled = false);
+            }
+        }
+
+        function calculateAccuracy(problemId, attempts) {
+            let score;
+            const absoluteAttempts = Math.abs(attempts);
+
+            if (absoluteAttempts === 1) score = 1.0;
+            else if (absoluteAttempts === 2) score = 0.8;
+            else if (absoluteAttempts === 3) score = 0.6;
+            else if (absoluteAttempts === 4) score = 0.4;
+            else score = 0.2;
+            
+            if (level3Attempts[problemId] > 0 || !level3Attempts.hasOwnProperty(problemId)) {
+                level3Accuracy.totalProblems++;
+                level3Accuracy.scoreSum += score;
+                if (absoluteAttempts === 1) {
+                    level3Accuracy.correctOnFirstTry++;
+                } else {
+                    level3Accuracy.retryCorrect++;
+                }
+            }
+        }
+
+        function nextLevel3Problem() {
+            // 정답을 맞춘 경우에만 다음 문제로 넘어감
+            if (level3CurrentProblem && level3Attempts[level3CurrentProblem.id] < 0) {
+                 generateNewLevel3Problem();
+            } else if (level3CurrentProblem) {
+                // 정답을 맞추지 못했을 때 '다음 문제' 버튼이 보이지 않으므로 이 경고는 필요 없음.
+                // 버튼 비활성화 해제는 generateNewLevel3Problem 내부에서 처리됨.
+            }
+        }
+
+        function handleLevel3Input(event) {
+            if (event.key === 'Enter') {
+                checkLevel3Answer();
+            }
+        }
+
+        function resetLevel3Accuracy() {
+            level3Accuracy = {
+                totalProblems: 0,
+                correctOnFirstTry: 0,
+                retryCorrect: 0,
+                scoreSum: 0,
+            };
+            level3Attempts = {};
+        }
+
+        function finishLevel3() {
+            // 1. 3단계 결과 페이지 표시 (오류 수정)
+            showPage('level3-result-page'); 
+            
+            let finalAccuracy = 0;
+            if (level3Accuracy.totalProblems > 0) {
+                finalAccuracy = (level3Accuracy.scoreSum / level3Accuracy.totalProblems) * 100;
+            }
+
+            document.getElementById('final-accuracy').textContent = `${Math.round(finalAccuracy)}%`;
+            document.getElementById('result-total-count').textContent = level3Accuracy.totalProblems;
+            document.getElementById('result-first-try').textContent = level3Accuracy.correctOnFirstTry;
+            document.getElementById('result-retry-count').textContent = level3Accuracy.retryCorrect; 
+            
+            // 다음 시작을 위해 초기화
+            resetLevel3Accuracy();
+        }
+
+        // 팝업 대신 인라인 메시지로 완료 표시
+        function showCompletionMessage(level) {
+            const messageElementId = level === 1 ? 'level1-completion-message' : 'level2-completion-message';
+            const messageElement = document.getElementById(messageElementId);
+            const dan = currentGuGuDan;
+            
+            messageElement.innerHTML = `
+                <div>
+                    🎉 ${dan}단을 완성했어요! 🎉
+                    <p>다음 단계로 넘어갈까요, 아니면 다른 단을 계속 연습할까요?</p>
+                    <div class="popup-buttons">
+                    </div>
+                </div>
+            `;
+            
+            if (level === 1) {
+                const continueBtn = createPopupButton('secondary-btn', '1단계 계속 하기', () => {
+                    messageElement.style.display = 'none';
+                    const nextDan = dan < 9 ? dan + 1 : 2;
+                    selectGuGuDan(1, nextDan);
+                });
+
+                const nextLevelBtn = createPopupButton('primary-btn', '2단계로 넘어가기', () => {
+                    messageElement.style.display = 'none';
+                    startLevel(2, dan);
+                });
+                
+                messageElement.querySelector('.popup-buttons').appendChild(continueBtn);
+                messageElement.querySelector('.popup-buttons').appendChild(nextLevelBtn);
+
+            } else if (level === 2) {
+                const backTo1Btn = createPopupButton('secondary-btn', '1단계로 돌아가기', () => {
+                    messageElement.style.display = 'none';
+                    startLevel(1, dan);
+                });
+                
+                const continue2Btn = createPopupButton('primary-btn', '2단계 계속 하기', () => {
+                    messageElement.style.display = 'none';
+                    loadLevel2Cards(currentGuGuDan, isReverse);
+                });
+
+                messageElement.querySelector('.popup-buttons').appendChild(backTo1Btn);
+                messageElement.querySelector('.popup-buttons').appendChild(continue2Btn);
+            }
+
+            messageElement.style.display = 'block';
+        }
+
+        function openQrPopup() {
+            qrPopupOverlay.style.display = 'flex';
+        }
+
+        function closeQrPopup() {
+            qrPopupOverlay.style.display = 'none';
+        }
+        
+        // 초기화 및 첫 페이지 로드
+        document.addEventListener('DOMContentLoaded', () => {
+            showPage('home-page');
+            // 3단계 버튼 크기 복구를 위해 DOMContentLoaded에서 CSS 클래스를 다시 설정
+            const mode4ChoiceBtn = document.getElementById('mode-4choice-btn');
+            if (mode4ChoiceBtn) mode4ChoiceBtn.textContent = '답 고르기';
+        });
+    </script>
+
+</body>
+</html>
